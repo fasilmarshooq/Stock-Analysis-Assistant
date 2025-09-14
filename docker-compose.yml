@@ -1,0 +1,20 @@
+services:
+  stock-analysis-assistant:
+    build: .
+    container_name: stock-analysis-assistant
+    ports:
+      - "8000:8000"  # Backend API
+      - "3000:3000"  # Frontend UI
+    volumes:
+      - ./backend/stock_analysis.db:/app/backend/stock_analysis.db
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
